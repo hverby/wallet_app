@@ -17,16 +17,18 @@ class WalletRepositoryImpl implements WalletRepository {
     try {
       final result = await remoteDataSource.getWalletOverview();
       return Right(result);
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
     } on ServerException catch (e) {
-      return Left(ServerFailure(
-        message: e.message,
-        statusCode: e.statusCode,
-        response: e.response,
-      ));
+      return Left(
+        ServerFailure(
+          message: e.message,
+          statusCode: e.statusCode,
+          response: e.response,
+        ),
+      );
     } catch (e) {
-      return Left(ServerFailure(
-        message: 'Unexpected error: ${e.toString()}',
-      ));
+      return Left(ServerFailure(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 
@@ -41,16 +43,18 @@ class WalletRepositoryImpl implements WalletRepository {
         take: take,
       );
       return Right(result);
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(message: e.message));
     } on ServerException catch (e) {
-      return Left(ServerFailure(
-        message: e.message,
-        statusCode: e.statusCode,
-        response: e.response,
-      ));
+      return Left(
+        ServerFailure(
+          message: e.message,
+          statusCode: e.statusCode,
+          response: e.response,
+        ),
+      );
     } catch (e) {
-      return Left(ServerFailure(
-        message: 'Unexpected error: ${e.toString()}',
-      ));
+      return Left(ServerFailure(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 }

@@ -5,8 +5,10 @@ class TransactionModel extends Transaction {
   const TransactionModel({
     required super.id,
     required super.alias,
+    required super.ticker,
     required super.date,
     required super.amount,
+    required super.cryptoAmount,
     required super.type,
   });
 
@@ -14,8 +16,10 @@ class TransactionModel extends Transaction {
     return TransactionModel(
       id: map['id'] as String,
       alias: map['alias'] as String,
+      ticker: map['ticker'] as String,
       date: DateTime.parse(map['date'] as String),
       amount: (map['amount'] as num).toDouble(),
+      cryptoAmount: (map['cryptoAmount'] as num).toDouble(),
       type: _parseTransactionType(map['type'] as String),
     );
   }
@@ -27,8 +31,10 @@ class TransactionModel extends Transaction {
     return {
       'id': id,
       'alias': alias,
+      'ticker': ticker,
       'date': date.toIso8601String(),
       'amount': amount,
+      'cryptoAmount': cryptoAmount,
       'type': type == TransactionType.credit ? 'credit' : 'debit',
     };
   }
