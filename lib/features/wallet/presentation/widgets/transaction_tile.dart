@@ -9,11 +9,13 @@ class TransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isCredit = transaction.type == TransactionType.credit;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       child: Row(
         children: [
-          _buildIcon(),
+          _buildArrowIcon(isCredit),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -22,109 +24,83 @@ class TransactionTile extends StatelessWidget {
                 Text(
                   transaction.alias,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: AppTheme.textPrimaryColor,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 3),
                 Text(
-                  transaction.ticker,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  _formatDate(transaction.date),
+                  style: TextStyle(
+                    fontSize: 13,
                     color: AppTheme.textSecondaryColor,
                   ),
                 ),
               ],
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                '€ ${_formatEuro(transaction.amount)}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimaryColor,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                '${_formatCrypto(transaction.cryptoAmount)} ${transaction.ticker}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppTheme.textSecondaryColor,
-                ),
-              ),
-            ],
+          Text(
+            '${isCredit ? '+' : '-'}${_formatAmount(transaction.amount)} F',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: AppTheme.accentColor,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildIcon() {
-    final color = _getCryptoColor(transaction.ticker);
+  Widget _buildArrowIcon(bool isCredit) {
     return Container(
-      width: 44,
-      height: 44,
+      width: 42,
+      height: 42,
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
+        color: Colors.grey[100],
         shape: BoxShape.circle,
       ),
       child: Center(
-        child: Text(
-          transaction.ticker.length >= 2
-              ? transaction.ticker.substring(0, 2)
-              : transaction.ticker,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
+        child: Icon(
+          isCredit ? Icons.arrow_upward : Icons.arrow_downward,
+          size: 20,
+          color: AppTheme.textPrimaryColor,
         ),
       ),
     );
   }
 
-  static Color _getCryptoColor(String ticker) {
-    final colors = {
-      'XRP': const Color(0xFF23292F),
-      'ETH': const Color(0xFF627EEA),
-      'SOL': const Color(0xFF00FFA3),
-      'DOGE': const Color(0xFFC2A633),
-      'BTC': const Color(0xFFF7931A),
-      'ADA': const Color(0xFF0033AD),
-      'DOT': const Color(0xFFE6007A),
-      'LINK': const Color(0xFF2A5ADA),
-      'LTC': const Color(0xFF345D9D),
-      'XLM': const Color(0xFF08B5E5),
-      'UNI': const Color(0xFFFF007A),
-      'AVAX': const Color(0xFFE84142),
-      'MATIC': const Color(0xFF8247E5),
-      'ATOM': const Color(0xFF2E3148),
-      'ALGO': const Color(0xFF000000),
-    };
-    return colors[ticker] ?? Colors.grey;
-  }
-
-  String _formatEuro(double amount) {
-    final parts = amount.toStringAsFixed(2).split('.');
-    final intPart = parts[0].replaceAllMapped(
+  String _formatAmount(double amount) {
+    final intPart = amount.toInt().toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]},',
+      (Match m) => '${m[1]}.',
     );
-    return '$intPart.${parts[1]}';
+    return intPart;
   }
 
-  String _formatCrypto(double amount) {
-    if (amount >= 1000) {
-      return amount.toStringAsFixed(0);
-    } else if (amount >= 1) {
-      return amount.toStringAsFixed(6);
-    } else {
-      return amount.toStringAsFixed(6);
-    }
+  String _formatDate(DateTime date) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    final month = months[date.month - 1];
+    final day = date.day;
+    final year = date.year;
+    final hour = date.hour;
+    final minute = date.minute.toString().padLeft(2, '0');
+    final period = hour >= 12 ? 'PM' : 'AM';
+    final hour12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+    return '$day $month $year • $hour12:$minute $period';
   }
 }

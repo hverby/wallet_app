@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static const Color primaryColor = Color(0xFF1E1E1E);
-  static const Color backgroundColor = Color(0xFFF5F5F5);
+  static const Color accentColor = Color(0xFF5B21B6);
+  static const Color backgroundColor = Colors.white;
   static const Color cardColor = Colors.white;
   static const Color successColor = Color(0xFF10B981);
   static const Color errorColor = Color(0xFFEF4444);
@@ -20,7 +21,7 @@ class AppTheme {
         surface: backgroundColor,
       ),
       scaffoldBackgroundColor: backgroundColor,
-      textTheme: GoogleFonts.spaceGroteskTextTheme(),
+      textTheme: GoogleFonts.interTextTheme(),
       cardTheme: const CardThemeData(
         color: cardColor,
         elevation: 0,
@@ -32,7 +33,7 @@ class AppTheme {
         backgroundColor: backgroundColor,
         elevation: 0,
         centerTitle: false,
-        titleTextStyle: GoogleFonts.spaceGrotesk(
+        titleTextStyle: GoogleFonts.inter(
           fontSize: 28,
           fontWeight: FontWeight.bold,
           color: textPrimaryColor,
