@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wallet_app/features/wallet/presentation/cubit/wallet_cubit.dart';
 import 'core/theme/app_theme.dart';
 import 'features/home/presentation/screens/home_screen.dart';
 import 'injection_container.dart' as di;
@@ -18,7 +20,10 @@ class MyApp extends StatelessWidget {
       title: 'Wallet App',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const HomeScreen(),
+      home: BlocProvider(
+        create: (_) => di.sl<WalletCubit>()..getWalletOverview(),
+        child: HomeScreen(),
+      ),
     );
   }
 }
