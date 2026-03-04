@@ -413,6 +413,10 @@ A 30-second video demonstration showcasing:
 - ✅ Error simulation via debug menu
 - ✅ Error retry flows
 
+
+https://github.com/user-attachments/assets/655c2013-6b98-4166-822f-24d145d8951e
+
+
 ---
 
 ## 📦 Dependencies
